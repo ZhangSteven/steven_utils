@@ -2,7 +2,7 @@
 # 
 
 import unittest2
-from steven_utils.iter import firstN, skipN
+from steven_utils.iter import firstN, skipN, firstOf, pop
 
 
 
@@ -33,3 +33,22 @@ class TestIter(unittest2.TestCase):
 						, list(skipN(3, filter(lambda x: x < 7, range(10)))))
 		self.assertEqual( []
 						, list(skipN(10, filter(lambda x: x < 7, range(10)))))
+
+
+
+	def testFirstOf(self):
+		self.assertEqual(3, firstOf(lambda x: x%2 == 1, [2, 4, 3, 1]))
+		self.assertEqual('abc', firstOf(lambda x: len(x) > 2, ['xx', '0', 'abc']))
+		self.assertEqual(None, firstOf(lambda x: x > 10, range(5)))
+		self.assertEqual(None, firstOf(lambda _: True, []))
+
+
+
+	def testPop(self):
+		self.assertEqual(None, pop([]))
+		self.assertEqual(None, pop(filter(lambda x: x < 0, range(3))))
+		self.assertEqual(2, pop([2, 3, 4]))
+
+		it = filter(lambda x: x > 2, range(6))
+		self.assertEqual(3, pop(it))
+		self.assertEqual([4, 5], list(it))

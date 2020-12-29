@@ -50,10 +50,11 @@ def pop(it):
 
 	[Iterable] it => [Object] first element in it, if empty return None.
 	"""
-	for x in it:
-		return x
-
-	return None
+	iterator = iter(it)
+	try:
+		return next(iterator)
+	except StopIteration:
+		return None
 
 
 # To maintain backward compatibility. Previously the name was "head",
@@ -62,16 +63,17 @@ head = pop
 
 
 
-def firstOf(condition, it):
-	"""
-	Non-pure function (it consumes the iterator)
+"""
+	[Function] func (x -> Bool, where x is an element of it,
+	[Iterable] it
+	=> [Object] x
 
-	[Iterable] it, [Function] condition => [Object] first element in it that
-		satisfies the condition, return None if no such elements or list is
-		empty.
-	"""
-	notSatisfyCondition = lambda x: False if condition(x) else True
-	return pop(dropwhile(notSatisfyCondition, it))
+	Where x is the first object in it that make the function func
+	return True. If it is empty or all elements make the function
+	return False, then return None.
+"""
+firstOf = lambda func, it: \
+	pop(dropwhile(lambda x: not func(x), it))
 
 
 
